@@ -43,7 +43,7 @@ function Textarea:new(ui, x, y, w, h, settings)
     self.text_ix, self.text_iy = self.text_x, self.text_y
     self.text_base_x, self.text_base_y = self.text_x, self.text_y
     self.editing_locked = settings.editing_locked
-    self.wrap_text_in = {} 
+    self.wrap_text_in = {}
     self.tab_width = settings.tab_width or 4
 
     self.font = settings.font or love.graphics.getFont()
@@ -70,7 +70,7 @@ function Textarea:new(ui, x, y, w, h, settings)
 
     if self.single_line then self.text_settings = {font = self.font}
     else self.text_settings = {font = self.font, wrap_width = self.wrap_width} end
-    self.text = self.ui.Text(self.text_x, self.text_y, self:join(), self.text_settings) 
+    self.text = self.ui.Text(self.text_x, self.text_y, self:join(), self.text_settings)
     if self.single_line then self.h = self.text.font:getHeight() + 4*self.text_margin end
 
     self.undo_stack_size = settings.undo_stack_size or 50
@@ -92,14 +92,14 @@ function Textarea:update(dt, parent)
     -- Set line text
     self.line_text = {}
     local n = 0
-    for i, c in ipairs(self.text_table) do 
+    for i, c in ipairs(self.text_table) do
         if self.text_table[i] == '\n' then
             table.insert(self.line_text, {character = c, line = n+1})
             n = n + 1
         else table.insert(self.line_text, {character = c, line = (self.text.characters[i-n] and self.text.characters[i-n].line) or 0}) end
     end
 
-    if self.editing_locked then 
+    if self.editing_locked then
         self.selected = false
         return
     end
@@ -131,7 +131,7 @@ function Textarea:update(dt, parent)
             if i == #self.line_text and my >= y and my <= y + h then self.cursor_index = i + 1; break end
         end
     end
-    
+
     -- Cursor selection with mouse
     if self.hot and self.input:pressed('left-click') then
         self.selection_index = false
@@ -171,7 +171,7 @@ function Textarea:update(dt, parent)
                     local line_first_index = self:getIndexOfFirstInLine(c.line)
                     local x, y = self.text_x + self.text.font:getWidth(line_string:utf8sub(1, i - line_first_index)), self.text_y + c.line*self.text.font:getHeight()
                     local w, h = self.text.font:getWidth(c.character), self.text.font:getHeight()
-                    if mx >= x and mx <= x + w then 
+                    if mx >= x and mx <= x + w then
                         self.selection_index = i
                         break
                     elseif mx >= x and i == #self.text.characters then
@@ -196,7 +196,7 @@ function Textarea:update(dt, parent)
                     local line_first_index = self:getIndexOfFirstInLine(c.line)
                     local x, y = self.text_x + self.text.font:getWidth(line_string:utf8sub(1, i - line_first_index)), self.text_y + c.line*self.text.font:getHeight()
                     local w, h = self.text.font:getWidth(c.character), self.text.font:getHeight()
-                    if mx >= x and mx <= x + w then 
+                    if mx >= x and mx <= x + w then
                         self.selection_index = i
                         break
                     end
@@ -328,9 +328,9 @@ function Textarea:update(dt, parent)
     end
 
     -- New line
-    if self.input:pressed('enter') then 
+    if self.input:pressed('enter') then
         if not self.single_line then
-            self:textinput('\n') 
+            self:textinput('\n')
         end
     end
 
@@ -346,7 +346,7 @@ function Textarea:update(dt, parent)
     -- Set line text
     self.line_text = {}
     local n = 0
-    for i, c in ipairs(self.text_table) do 
+    for i, c in ipairs(self.text_table) do
         if self.text_table[i] == '\n' then
             table.insert(self.line_text, {character = c, line = n+1})
             n = n + 1
@@ -492,7 +492,7 @@ function Textarea:updateText()
     -- Set line text
     self.line_text = {}
     local n = 0
-    for i, c in ipairs(self.text_table) do 
+    for i, c in ipairs(self.text_table) do
         if self.text_table[i] == '\n' then
             table.insert(self.line_text, {character = c, line = n+1})
             n = n + 1
@@ -610,9 +610,9 @@ end
 
 function Textarea:getMaxLines()
     local n_lines = 0
-    for i, c in ipairs(self.line_text) do 
+    for i, c in ipairs(self.line_text) do
         if c.character ~= '\n' then
-            n_lines = c.line + 1 
+            n_lines = c.line + 1
         end
     end
     return n_lines
@@ -630,7 +630,7 @@ end
 
 function Textarea:moveRight()
     self.cursor_blink_timer = 0
-    self.cursor_visible = true 
+    self.cursor_visible = true
     self.mouse_all_selected = false
     if self.selection_index then self.index = self.selection_index - 1 end
     self.index = self.index + 1
@@ -639,15 +639,16 @@ function Textarea:moveRight()
 end
 
 function Textarea:moveUp()
+    if #self.text_table == 0 then return end --don't move the cursor if there is no text
     self.cursor_blink_timer = 0
     self.cursor_visible = true
     self.mouse_all_selected = false
     if self.selection_index then self.index = self.selection_index end
     local index_line = self:getIndexLine(self.index) or self:getIndexLine(self.index - 1)
-    if index_line == 0 then 
+    if index_line == 0 then
         self.index = 1
         self.selection_index = nil
-        return 
+        return
     end
     local line_first_index = self:getIndexOfFirstInLine(self:getIndexLine(self.index)) or 1
     local w = self.text.font:getWidth(self:getLineString(index_line):utf8sub(1, self.index - line_first_index))
@@ -656,31 +657,33 @@ function Textarea:moveUp()
         if c.line == index_line - 1 then
             string = string .. c.character
             local lw = self.text.font:getWidth(string)
-            if lw >= w then 
+            if lw >= w then
                 if w == 0 then self.index = i
-                else 
-                    if self:getIndexLine(i+1) == c.line then self.index = i + 1 
+                else
+                    if self:getIndexLine(i+1) == c.line then self.index = i + 1
                     else self.index = i end
                 end
                 self.selection_index = nil
-                return 
+                return
             end
         end
     end
+    assert(false, self.text)
     self.index = self:getIndexOfLastInLine(index_line - 1) or (self:getIndexOfLastInLine(index_line - 2) + 1) or 1
     self.selection_index = nil
 end
 
 function Textarea:moveDown()
+    if #self.text_table == 0 then return end --don't move the cursor if there is no text
     self.cursor_blink_timer = 0
     self.cursor_visible = true
     self.mouse_all_selected = false
     if self.selection_index then self.index = self.selection_index end
     local index_line = self:getIndexLine(self.index) or self:getIndexLine(self.index - 1)
-    if index_line == self:getMaxLines() - 1 then 
+    if index_line == self:getMaxLines() - 1 then
         self.index = #self.line_text + 1
         self.selection_index = nil
-        return 
+        return
     end
     local line_first_index = self:getIndexOfFirstInLine(self:getIndexLine(self.index)) or 1
     local w = self.text.font:getWidth(self:getLineString(index_line):utf8sub(1, self.index - line_first_index))
@@ -689,14 +692,14 @@ function Textarea:moveDown()
         if c.line == index_line + 1 then
             string = string .. c.character
             local lw = self.text.font:getWidth(string)
-            if lw >= w then 
+            if lw >= w then
                 if w == 0 then self.index = i
-                else 
-                    if self:getIndexLine(i+1) == c.line then self.index = i + 1 
+                else
+                    if self:getIndexLine(i+1) == c.line then self.index = i + 1
                     else self.index = i end
                 end
                 self.selection_index = nil
-                return 
+                return
             end
         end
     end
@@ -728,9 +731,9 @@ function Textarea:selectUp()
     self.mouse_all_selected = false
     if not self.selection_index then self.selection_index = self.index end
     local index_line = self:getIndexLine(self.selection_index) or self:getIndexLine(self.selection_index - 1)
-    if index_line == 0 then 
+    if index_line == 0 then
         self.selection_index = 1
-        return 
+        return
     end
     local line_first_index = self:getIndexOfFirstInLine(self:getIndexLine(self.selection_index)) or 1
     local w = self.text.font:getWidth(self:getLineString(index_line):utf8sub(1, self.selection_index - line_first_index))
@@ -739,13 +742,13 @@ function Textarea:selectUp()
         if c.line == index_line - 1 then
             string = string .. c.character
             local lw = self.text.font:getWidth(string)
-            if lw >= w then 
+            if lw >= w then
                 if w == 0 then self.selection_index = i
-                else 
-                    if self:getIndexLine(i+1) == c.line then self.selection_index = i + 1 
+                else
+                    if self:getIndexLine(i+1) == c.line then self.selection_index = i + 1
                     else self.selection_index = i end
                 end
-                return 
+                return
             end
         end
     end
@@ -758,9 +761,9 @@ function Textarea:selectDown()
     self.mouse_all_selected = false
     if not self.selection_index then self.selection_index = self.index + 1 end
     local index_line = self:getIndexLine(self.selection_index) or self:getIndexLine(self.selection_index - 1)
-    if index_line == self:getMaxLines() - 1 then 
+    if index_line == self:getMaxLines() - 1 then
         self.selection_index = #self.line_text + 1
-        return 
+        return
     end
     local line_first_index = self:getIndexOfFirstInLine(self:getIndexLine(self.selection_index)) or 1
     local w = self.text.font:getWidth(self:getLineString(index_line):utf8sub(1, self.selection_index - line_first_index))
@@ -769,13 +772,13 @@ function Textarea:selectDown()
         if c.line == index_line + 1 then
             string = string .. c.character
             local lw = self.text.font:getWidth(string)
-            if lw >= w then 
+            if lw >= w then
                 if w == 0 then self.selection_index = i
-                else 
-                    if self:getIndexLine(i+1) == c.line then self.selection_index = i + 1 
+                else
+                    if self:getIndexLine(i+1) == c.line then self.selection_index = i + 1
                     else self.selection_index = i end
                 end
-                return 
+                return
             end
         end
     end
@@ -813,8 +816,8 @@ function Textarea:deleteSelected()
     local internal_min, internal_max = 0, 0
     if self.index < self.selection_index then min = self.index; max = self.selection_index - 1
     elseif self.selection_index < self.index then min = self.selection_index; max = self.index - 1 end
-    for i = max, min, -1 do 
-        table.remove(self.text_table, i) 
+    for i = max, min, -1 do
+        table.remove(self.text_table, i)
         table.remove(self.tags_table, i)
     end
     self.index = min
@@ -826,11 +829,11 @@ function Textarea:backspace()
     self.cursor_blink_timer = 0
     self.cursor_visible = true
     if self.selection_index then self:deleteSelected()
-    else 
+    else
         if self.index > 1 then
             if self.last_action ~= 'backspace' then self:undoPush(self:saveState()) end
             self.last_action = 'backspace'
-            table.remove(self.text_table, self.index - 1) 
+            table.remove(self.text_table, self.index - 1)
             table.remove(self.tags_table, self.index - 1)
             self.index = self.index - 1
         end
@@ -845,7 +848,7 @@ function Textarea:delete()
     else
         if self.last_action ~= 'delete' then self:undoPush(self:saveState()) end
         self.last_action = 'delete'
-        table.remove(self.text_table, self.index) 
+        table.remove(self.text_table, self.index)
         table.remove(self.tags_table, self.index)
         if self.index == #self.line_text then
             self.index = self.index - 1
@@ -865,8 +868,8 @@ function Textarea:copy()
     local min, max = 0, 0
     if self.index < self.selection_index then min = self.index; max = self.selection_index - 1
     elseif self.selection_index < self.index then min = self.selection_index; max = self.index - 1 end
-    for i = min, max do 
-        table.insert(self.copy_buffer, self.line_text[i].character) 
+    for i = min, max do
+        table.insert(self.copy_buffer, self.line_text[i].character)
         table.insert(self.tags_buffer, self.tags_table[i])
     end
 end
@@ -921,11 +924,11 @@ function Textarea:applyTagToSelectedText(tag)
     for i = min, max-1 do
         if self.tags_table[i] == '' then self.tags_table[i] = tag
         else
-            if self.tags_table[i]:find('bold') and not self.tags_table[i]:find('bold_italic') and tag == 'italic' then 
+            if self.tags_table[i]:find('bold') and not self.tags_table[i]:find('bold_italic') and tag == 'italic' then
                 local u, v = self.tags_table[i]:find('bold')
                 local head = self.tags_table[i]:sub(1, v)
                 local tail = self.tags_table[i]:sub(v+1, -1)
-                self.tags_table[i] = head .. '_italic' .. tail 
+                self.tags_table[i] = head .. '_italic' .. tail
             elseif self.tags_table[i]:find('italic') and not self.tags_table[i]:find('bold_italic') and tag == 'bold' then
                 local u, v = self.tags_table[i]:find('italic')
                 local head = self.tags_table[i]:sub(1, u-1)
@@ -941,7 +944,7 @@ function Textarea:applyTagToSelectedText(tag)
                 local head = self.tags_table[i]:sub(1, u-1)
                 local tail = self.tags_table[i]:sub(v+1, -1)
                 self.tags_table[i] = head .. 'italic' .. tail
-            else 
+            else
                 if self.tags_table[i]:find(tag) then
                     if self.tags_table[i] == tag then self.tags_table[i] = ''
                     else
