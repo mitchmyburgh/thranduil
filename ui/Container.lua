@@ -113,6 +113,14 @@ function Container:containerRemoveElement(id)
     end
 end
 
+function Container:containerGetElement(id)
+    for i, element in ipairs(self.elements) do
+        if element.id == id then 
+            return element
+        end
+    end
+end
+
 function Container:addAlignedElement(element)
     local pointInRectangle = function(x, y, bx, by, bw, bh) if x >= bx and x <= bx + bw and y >= by and y <= by + bh then return true end end
     local rectangleInRectangle = function(ax, ay, aw, ah, bx, by, bw, bh) return ax <= bx + bw and bx <= ax + aw and ay <= by + bh and by <= ay + ah end
