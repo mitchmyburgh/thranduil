@@ -2,7 +2,7 @@ local ui_path = ... .. '.'
 local UI = {}
 require(ui_path .. 'utf8-l')
 UI.Object = require(ui_path .. 'classic.classic')
-UI.Input = require(ui_path .. 'Input.Input')
+UI.Input = require(ui_path .. 'input.Input')
 UI.Text = require(ui_path .. 'popo.Text')
 UI.Math = require(ui_path .. 'mlib.mlib')
 
@@ -95,17 +95,28 @@ UI.removeFromElementsList = function(id)
     end
 end
 
+UI.DefaultTheme = nil
+applyDefaultTheme = function(ui_element_type, ...)
+    if not UI.DefaultTheme then return unpack({...}) end
+    args = {...}
+    if not args[5] then args[5] = {} end
+    if args[5] and type(args[5]) == 'table' then
+        if not args[5].extensions then args[5].extensions = {UI.DefaultTheme[ui_element_type]} end
+    end
+    return unpack(args)
+end
+
 local Button = require(ui_path .. 'Button')
-UI.Button = function(...) return Button(UI, ...) end
+UI.Button = function(...) return Button(UI, applyDefaultTheme('Button', ...)) end
 local Checkbox = require(ui_path .. 'Checkbox')
-UI.Checkbox = function(...) return Checkbox(UI, ...) end
+UI.Checkbox = function(...) return Checkbox(UI, applyDefaultTheme('Checkbox', ...)) end
 local Frame = require(ui_path .. 'Frame')
-UI.Frame = function(...) return Frame(UI, ...) end
+UI.Frame = function(...) return Frame(UI, applyDefaultTheme('Frame', ...)) end
 local Scrollarea = require(ui_path .. 'Scrollarea')
-UI.Scrollarea = function(...) return Scrollarea(UI, ...) end
+UI.Scrollarea = function(...) return Scrollarea(UI, applyDefaultTheme('Scrollarea', ...)) end
 local Slider = require(ui_path .. 'Slider')
-UI.Slider = function(...) return Slider(UI, ...) end
+UI.Slider = function(...) return Slider(UI, applyDefaultTheme('Slider', ...)) end
 local Textarea = require(ui_path .. 'Textarea')
-UI.Textarea = function(...) return Textarea(UI, ...) end
+UI.Textarea = function(...) return Textarea(UI, applyDefaultTheme('Textarea', ...)) end
 
 return UI

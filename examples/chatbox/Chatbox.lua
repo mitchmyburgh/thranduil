@@ -1,18 +1,19 @@
 local Chatbox = UI.Object:extend('Chatbox')
 
 function Chatbox:new(x, y, w, h)
-    self.main_frame = UI.Frame(x, y, w, h, {extensions = {Theme.Frame}, draggable = true, drag_margin = 20, disable_directional_selection = true, disable_tab_selection = true})
-    self.scrollarea = UI.Scrollarea(5, 25, w - 10, h - 70, {extensions = {Theme.Scrollarea}, scrollbar_button_extensions = {Theme.Button}, 
+    UI.DefaultTheme = Theme
+    self.main_frame = UI.Frame(x, y, w, h, {draggable = true, drag_margin = 20, disable_directional_selection = true, disable_tab_selection = true})
+    self.scrollarea = UI.Scrollarea(5, 25, w - 10, h - 70, {scrollbar_button_extensions = {Theme.Button}, 
                                                             area_width = w - 10 - 15, area_height = h - 70, show_scrollbars = true})
     self.main_frame:addElement(self.scrollarea)
 
-    self.textarea = UI.Textarea(0, 0, w - 10, h - 70, {extensions = {Theme.Textarea}, text_margin = 5, editing_locked = true})
+    self.textarea = UI.Textarea(0, 0, w - 10, h - 70, {text_margin = 5, editing_locked = true})
     self.scrollarea:addElement(self.textarea)
 
-    self.textinput = UI.Textarea(5, 25 + h - 70 + 5, w - 50, h, {extensions = {Theme.Textarea}, single_line = true, font = font, text_margin = 4})
+    self.textinput = UI.Textarea(5, 25 + h - 70 + 5, w - 50, h, {single_line = true, font = font, text_margin = 4})
     self.main_frame:addElement(self.textinput)
 
-    self.send_button = UI.Button(w - 40, h - 40, 35, 35, {extensions = {Theme.Button}})
+    self.send_button = UI.Button(w - 40, h - 40, 35, 35)
     self.main_frame:addElement(self.send_button)
 
     self.scrollarea.horizontal_scrolling = false

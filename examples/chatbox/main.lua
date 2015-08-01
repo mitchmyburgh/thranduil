@@ -1,5 +1,5 @@
 Theme = require 'Theme'
-UI = require 'ui'
+UI = require 'UI'
 Chatbox = require 'Chatbox'
 
 function love.load()
