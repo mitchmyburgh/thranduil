@@ -1,6 +1,19 @@
-v0.2.0
+v0.2.1
 
 ## CHANGELOG
+
+### v0.2.1
+
+#### Additions
+
+* Added UI.DefaultTheme - [e302f46](https://github.com/adonaac/thranduil/commit/e302f4656ef85ddcae293a9d0e2d0a293da73e32) (2015-07-31 21:20:07)
+
+#### Fixes
+
+* Fixed Checkbox checked triggers - [e302f46](https://github.com/adonaac/thranduil/commit/e302f4656ef85ddcae293a9d0e2d0a293da73e32) (2015-07-31 21:20:07)
+* Fixed Input (.) - [e302f46](https://github.com/adonaac/thranduil/commit/e302f4656ef85ddcae293a9d0e2d0a293da73e32) (2015-07-31 21:20:07)
+
+---
 
 ### v0.2.0
 
