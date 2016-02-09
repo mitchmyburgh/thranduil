@@ -1,3 +1,11 @@
+# WARNING
+
+### NO LONGER MAINTAINED
+
+This projected is no longer being maintained or updated in any way.
+
+---
+
 # Thranduil
 
 A UI module for LÖVE. Facilitates the creation of game specific UI through UI elements that have all their logic abstracted away. Each element is simple enough and exposes as much of its state as possible, meaning you can use this state to draw the element in whatever way you want or to build new UI elements with it (say you wanna make a menu, you can do it with a bunch of Buttons and a Frame). Elements can also be expanded easily via the injection of custom attributes and methods, providing **!¡ENDLESS CUSTOMIZABILITY¡!**
